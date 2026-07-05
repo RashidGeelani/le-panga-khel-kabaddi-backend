@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+
+# env
+.env
+
+# # uploads (optional)
+# uploads/
+
+# logs
+logs
+*.log
+
+# editor
+.vscode
+.idea
+
+# macOS
+.DS_Store
+
+uploads/
+
+credentials/service-account.json
