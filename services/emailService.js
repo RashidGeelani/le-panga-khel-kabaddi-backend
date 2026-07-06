@@ -1,26 +1,6 @@
-const nodemailer = require("nodemailer");
-const dns = require("dns");
+const { Resend } = require("resend");
 
-dns.setDefaultResultOrder("ipv4first");
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  family: 4,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ SMTP Error:", error);
-  } else {
-    console.log("✅ SMTP Server Ready");
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendRegistrationEmail({
   email,
@@ -28,10 +8,12 @@ async function sendRegistrationEmail({
   teamName,
   registrationId,
 }) {
-  await transporter.sendMail({
-    from: `"LPKK Tournament" <${process.env.EMAIL_USER}>`,
+  const { data, error } = await resend.emails.send({
+    from: "Le Panga Khel Kabaddi <register@lepangakhelkabaddi.in>",
+    replyTo: "geelani.rashu249@gmail.com",
     to: email,
     subject: "🏆 LPKK Tournament Registration Received",
+
     html: `
       <h2>Registration Successful</h2>
 
@@ -44,10 +26,12 @@ async function sendRegistrationEmail({
           <td><strong>Registration ID</strong></td>
           <td>${registrationId}</td>
         </tr>
+
         <tr>
           <td><strong>Team</strong></td>
           <td>${teamName}</td>
         </tr>
+
         <tr>
           <td><strong>Status</strong></td>
           <td>Pending Verification</td>
@@ -56,14 +40,23 @@ async function sendRegistrationEmail({
 
       <br>
 
-      <p>Our team will verify your payment and contact you soon.</p>
+      <p>Our committee will verify your payment shortly.</p>
 
       <br>
 
-      <b>LPKK Tournament Committee</b>
+      <b>Le Panga Khel Kabaddi</b>
+      <b>President: Jalal Uddin Qadir</b>
     `,
   });
 }
+
+if (error) {
+  console.error("Resend Error:", error);
+  throw new Error(error.message);
+}
+
+console.log("Email sent:", data?.id);
+
 
 async function notifyOrganizer({
   registrationId,
@@ -72,22 +65,34 @@ async function notifyOrganizer({
   phone,
   district,
 }) {
-  await transporter.sendMail({
-    from: `"LPKK Tournament" <${process.env.EMAIL_USER}>`,
+const { data, error } =  await resend.emails.send({
+    from: "Le Panga Khel Kabaddi <register@lepangakhelkabaddi.in>",
     to: process.env.ADMIN_EMAIL,
+
     subject: `🚨 New Registration - ${teamName}`,
+
     html: `
-      <h2>New Team Registered</h2>
+      <h2>New Registration</h2>
 
       <p><b>Registration ID:</b> ${registrationId}</p>
+
       <p><b>Team:</b> ${teamName}</p>
+
       <p><b>Captain:</b> ${captainName}</p>
+
       <p><b>Phone:</b> ${phone}</p>
+
       <p><b>District:</b> ${district}</p>
     `,
   });
 }
 
+
+if (error) {
+  console.error("Resend Error:", error);
+  throw new Error(error.message);
+}
+console.log("Email sent:", data?.id);
 module.exports = {
   sendRegistrationEmail,
   notifyOrganizer,
