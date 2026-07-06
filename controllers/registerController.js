@@ -47,7 +47,7 @@ exports.register = async (req, res) => {
 
     const duplicate = rows.find((row) => {
       const existingTeam = (row[2] || "").trim().toLowerCase();
-      const existingPhone = (row[5] || "").trim();
+      const existingPhone = (row[6] || "").trim();
       const existingEmail = (row[7] || "").trim().toLowerCase();
 
       return (
@@ -96,22 +96,18 @@ exports.register = async (req, res) => {
       paymentUrl = uploadedPayment.url;
     }
 
-    const playerPhotos = [];
+    let captainPhotoUrl = "";
 
-for (let i = 1; i <= 12; i++) {
-  const file = req.files?.[`playerPhoto${i}`]?.[0];
+if (req.files?.captainPhoto?.length) {
+  const uploadedCaptain = await uploadImage(
+    req.files.captainPhoto[0],
+    "lpkk/captains"
+  );
 
-  if (file) {
-    const uploaded = await uploadImage(
-      file,
-      `lpkk/players/${registrationId}`
-    );
-
-    playerPhotos.push(uploaded.url);
-  } else {
-    playerPhotos.push("");
-  }
+  captainPhotoUrl = uploadedCaptain.url;
 }
+
+
 
 
     // ===============================
@@ -119,33 +115,36 @@ for (let i = 1; i <= 12; i++) {
     // ===============================
 
     await appendRegistration([
-      registrationId,
-      new Date().toLocaleString(),
+  registrationId,
+  new Date().toLocaleString(),
 
-      teamName,
-      captainName,
-      managerName,
+  teamName,
+  captainName,
+  captainPhotoUrl,
 
-      phone,
-      altPhone,
+  managerName,
 
-      email,
+  phone,
 
-      district,
+  email,
 
-      playerList.join(", "),
+  district,
 
-      logoUrl,
-      paymentUrl,
+  altPhone,
 
-      "Pending",
-    ]);
+  playerList.join(", "),
+
+  logoUrl,
+
+  paymentUrl,
+
+  "Pending",
+]);
 
     const playerRows = playerList.map((name, index) => [
   registrationId,
   index + 1,
   name,
-  playerPhotos[index] || "",
 ]);
 
 await appendPlayers(playerRows);

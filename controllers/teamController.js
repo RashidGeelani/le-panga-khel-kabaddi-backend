@@ -11,34 +11,38 @@ console.log(rows);
     rows.shift();
 
     const teams = rows
-      .filter((row) => row[12] === "Approved")
+      .filter((row) => row[13] === "Approved")
       .map((row, index) => ({
-        id: index + 1,
+      id: index + 1,
 
-        registrationId: row[0],
+      registrationId: row[0],
 
-        teamName: row[2],
+      teamName: row[2],
 
-        captainName: row[3],
+      captainName: row[3],
 
-        managerName: row[4],
+      captainPhoto: row[4],
 
-        phone: row[5],
+      managerName: row[5],
 
-        email: row[7],
+      phone: row[6],
 
-        district: row[8],
+      email: row[7],
 
-        players: row[9]
-          ? row[9].split(",").map((p) => p.trim())
-          : [],
+      district: row[8],
 
-        logo: row[10],
+      alternatePhone: row[9],
 
-        payment: row[11],
+      players: row[10]
+        ? row[10].split(",").map((p) => p.trim())
+        : [],
 
-        status: row[12],
-      }));
+      logo: row[11],
+
+      payment: row[12],
+
+      status: row[13],
+    }));
       
     res.json({
       success: true,
@@ -63,7 +67,7 @@ exports.getTeamById = async (req, res) => {
     registrations.shift();
 
     const row = registrations.find(
-      (r) => r[0] === registrationId && r[12] === "Approved"
+      (r) => r[0] === registrationId && r[13] === "Approved"
     );
 
     if (!row) {
@@ -81,7 +85,6 @@ exports.getTeamById = async (req, res) => {
       .map((p) => ({
         number: Number(p[1]),
         name: p[2],
-        photo: p[3],
       }));
 
     return res.json({
@@ -90,12 +93,15 @@ exports.getTeamById = async (req, res) => {
         registrationId: row[0],
         teamName: row[2],
         captainName: row[3],
-        managerName: row[4],
-        phone: row[5],
+        captainPhoto: row[4],
+        managerName: row[5],
+        phone: row[6],
         email: row[7],
         district: row[8],
-        logo: row[10],
-        status: row[12],
+        alternatePhone: row[9],
+        logo: row[11],
+        payment: row[12],
+        status: row[13],
         players,
       },
     });

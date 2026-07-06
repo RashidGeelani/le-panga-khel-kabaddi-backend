@@ -22,10 +22,9 @@ const storage = multer.diskStorage({
       return cb(null, paymentDir);
     }
 
-    // Accept playerPhoto1 ... playerPhoto12
-    if (file.fieldname.startsWith("playerPhoto")) {
-      return cb(null, playerDir);
-    }
+   if (file.fieldname === "captainPhoto") {
+  return cb(null, playerDir);
+}
 
     return cb(new Error(`Invalid file field: ${file.fieldname}`));
   },

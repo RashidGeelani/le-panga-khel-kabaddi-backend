@@ -1,4 +1,9 @@
+
+
 function validateRegistration(req, res, next) {
+  console.log("BODY:", req.body);
+console.log("FILES:", req.files);
+  console.log("FILES KEYS:", Object.keys(req.files || {}));
   const {
     teamName,
     captainName,
@@ -13,14 +18,14 @@ function validateRegistration(req, res, next) {
   const phoneRegex = /^[6-9]\d{9}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!teamName?.trim()) {
+  if (typeof teamName !== "string" || !teamName.trim()) {
     return res.status(400).json({
       success: false,
       message: "Team name is required.",
     });
   }
 
-  if (!captainName?.trim()) {
+  if (typeof captainName !== "string" || !captainName.trim()) {
     return res.status(400).json({
       success: false,
       message: "Captain name is required.",
@@ -55,7 +60,7 @@ function validateRegistration(req, res, next) {
     });
   }
 
-  if (!district?.trim()) {
+  if (typeof district !== "string" || !district.trim()) {
     return res.status(400).json({
       success: false,
       message: "District is required.",
@@ -83,7 +88,7 @@ function validateRegistration(req, res, next) {
     });
   }
 
-  if (playerList.length < 7 || playerList.length > 12) {
+  if (playerList.length < 7 || playerList.length > 10) {
     return res.status(400).json({
       success: false,
       message: "Team must have between 7 and 12 players.",
@@ -104,6 +109,50 @@ function validateRegistration(req, res, next) {
       message: "Duplicate player names are not allowed.",
     });
   }
+
+ // Required uploads
+
+if (!req.files?.logo?.[0]) {
+  return res.status(400).json({
+    success: false,
+    message: "Team logo is required.",
+  });
+}
+
+if (!req.files?.captainPhoto?.[0]) {
+  return res.status(400).json({
+    success: false,
+    message: "Captain photograph is required.",
+  });
+}
+
+if (!req.files?.payment?.[0]) {
+  return res.status(400).json({
+    success: false,
+    message: "Payment screenshot is required.",
+  });
+}// Required uploads
+
+if (!req.files?.logo?.[0]) {
+  return res.status(400).json({
+    success: false,
+    message: "Team logo is required.",
+  });
+}
+
+if (!req.files?.captainPhoto?.[0]) {
+  return res.status(400).json({
+    success: false,
+    message: "Captain photograph is required.",
+  });
+}
+
+if (!req.files?.payment?.[0]) {
+  return res.status(400).json({
+    success: false,
+    message: "Payment screenshot is required.",
+  });
+}
 
   req.body.players = cleanedPlayers;
 

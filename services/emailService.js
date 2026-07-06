@@ -43,8 +43,14 @@ async function sendRegistrationEmail({
       <p>Our committee will verify your payment shortly.</p>
 
       <br>
+      <p>Check teams page, your team will be listed after payment verification,</p>
+      <br>
+      <p>if it is taking longer reply to this mail.</p>
+      <br>
+
 
       <b>Le Panga Khel Kabaddi</b>
+      <br>
       <b>President: Jalal Uddin Qadir</b>
     `,
   });

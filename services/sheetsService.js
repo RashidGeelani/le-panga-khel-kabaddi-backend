@@ -1,7 +1,7 @@
-const { sheets, spreadsheetId } = require("./google");
+const { sheets } = require("./google");
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const SHEET_NAME = "Registration"; // Change if your tab name differs
+const SHEET_NAME = "Registration";
 
 async function appendRegistration(data) {
   await sheets.spreadsheets.values.append({
@@ -17,7 +17,7 @@ async function appendRegistration(data) {
 async function getAllRegistrations() {
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: `${SHEET_NAME}!A:M`,
+    range: `${SHEET_NAME}!A:N`,
   });
 
   return response.data.values || [];
@@ -26,17 +26,18 @@ async function getAllRegistrations() {
 async function appendPlayers(rows) {
   await sheets.spreadsheets.values.append({
     spreadsheetId: SHEET_ID,
-    range: "Players!A:D",
+    range: "Players!A:C",
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: rows,
     },
   });
 }
+
 async function getAllPlayers() {
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: "Players!A:D",
+    range: "Players!A:C",
   });
 
   return response.data.values || [];
