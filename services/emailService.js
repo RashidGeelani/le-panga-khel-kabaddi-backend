@@ -48,14 +48,15 @@ async function sendRegistrationEmail({
       <b>President: Jalal Uddin Qadir</b>
     `,
   });
+  if (error) {
+    console.error("Resend Error:", error);
+    throw new Error(error.message);
+  }
+
+  console.log("Email sent:", data?.id);
 }
 
-if (error) {
-  console.error("Resend Error:", error);
-  throw new Error(error.message);
-}
 
-console.log("Email sent:", data?.id);
 
 
 async function notifyOrganizer({
@@ -85,14 +86,16 @@ const { data, error } =  await resend.emails.send({
       <p><b>District:</b> ${district}</p>
     `,
   });
+  if (error) {
+    console.error("Resend Error:", error);
+    throw new Error(error.message);
+  }
+  console.log("Email sent:", data?.id);
 }
 
 
-if (error) {
-  console.error("Resend Error:", error);
-  throw new Error(error.message);
-}
-console.log("Email sent:", data?.id);
+
+
 module.exports = {
   sendRegistrationEmail,
   notifyOrganizer,
