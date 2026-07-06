@@ -10,7 +10,7 @@ async function sendRegistrationEmail({
 }) {
   const { data, error } = await resend.emails.send({
     from: "Le Panga Khel Kabaddi <register@lepangakhelkabaddi.in>",
-    replyTo: "geelani.rashu249@gmail.com",
+    replyTo: "muzamilmushtaq5321@gmail.com",
     to: email,
     subject: "🏆 LPKK Tournament Registration Received",
 
